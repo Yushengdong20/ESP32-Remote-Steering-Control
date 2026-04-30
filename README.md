@@ -54,9 +54,16 @@
 - 积分分离: 大误差时停止积分，防止超调
 - 积分限幅: ±30
 
-### Controller\_test
+### Controller_test
 
-与 Controller 相同，但启用双路 PWM 电机输出。
+最终成品，包含完整的 PID 闭环控制和双路 PWM 电机实际输出。
+
+### Controller_end ⚠️ 中间产物
+
+**非最终版本**，用于测试遥控开关通道功能。相比 Controller_test：
+- 增加了 CH4 (GPIO19)、CH5 (GPIO23) 两个开关通道
+- **移除了电机驱动输出**（无 PWM 输出）
+- 仅用于功能验证，不适合实际使用
 
 ### ADC\_Collect
 
@@ -88,21 +95,24 @@ PWM_read (读取遥控) → motor_100_test (验证PWM输出)
 ADC_Collect (标定电位器) → Controller (PID算法验证) → Controller_test (最终成品)
 ```
 
-**最终版本判定依据 Controller\_test:**
+**最终版本判定依据:**
 
-| 成熟度  | 文件                              | 说明                |
-| ---- | ------------------------------- | ----------------- |
-| ⭐ 基础 | PWM\_read / ADC\_Collect / uart | 单功能测试             |
-| ⭐⭐   | motor\_100 / motor\_100\_test   | 电机驱动验证            |
-| ⭐⭐⭐  | Controller                      | PID算法验证(仅串口输出)    |
-| ⭐⭐⭐⭐ | **Controller\_test**            | **完整闭环 + 实际电机输出** |
+| 成熟度  | 文件                              | 说明                | 状态     |
+| ---- | ------------------------------- | ----------------- | ------ |
+| ⭐ 基础 | PWM\_read / ADC\_Collect / uart | 单功能测试             | 测试模块   |
+| ⭐⭐   | motor\_100 / motor\_100\_test   | 电机驱动验证            | 测试模块   |
+| ⭐⭐⭐  | Controller                      | PID算法验证(仅串口输出)    | 测试模块   |
+| ⭐⭐⭐⭐ | **Controller\_test**            | **完整闭环 + 实际电机输出** | **最终成品** |
+| ⚠️    | **Controller_end**              | 开关通道测试(无电机输出)   | **中间产物** |
 
-Controller\_test 功能最完整，包含:
+**Controller_test** 是功能最完整的最终版本，包含:
 
 - 遥控 PWM 信号解析
 - ADC 位置反馈
 - PID 闭环控制算法
 - 双路 PWM 电机实际输出
+
+**Controller_end** 是中间产物，用于测试遥控开关通道功能，**不包含电机驱动输出**。
 
 ## 使用方法
 
